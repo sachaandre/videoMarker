@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Player</title>
+  </head>
+  <body>
+    <section class="player">
+      <div class="video-container">
+        <video id="primaryContent" width="1280">
+          <source src="../../media/module_1/test_module1.mp4" type="video/mp4"/>
+          Votre navigateur ne supporte pas les vidéos embarquées. Veuillez utiliser un navigateur plus récent.
+        </video>
+      </div>
+      <div class="video-controllers">
+        <button onclick="vid.play()">Play</button>
+        <button onclick="vid.pause()">Pause</button>
+      </div>
+    </section>
+    <script type="text/javascript">
+      var vid = null;
+      vid = document.getElementById('primaryContent');
+    </script>
+  </body>
+</html>
