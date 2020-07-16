@@ -9,11 +9,3 @@ const routes = {
 const mainDiv = document.getElementById('main');
 mainDiv.innerHTML = routes[window.location.pathname].outerHTML;
 if (window.location.pathname == '/player') generatePlayerPage();
-
-const onNavigate = (pathname) => {
-  window.history.pushState(
-    {},
-    window.location.origin + pathname
-  )
-  mainDiv.innerHTML = routes[pathname]
-}

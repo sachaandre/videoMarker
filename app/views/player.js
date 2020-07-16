@@ -21,12 +21,19 @@ function generatePlayerPage(){
   vidContainer.setAttribute("id","videoContainer");
   player.appendChild(vidContainer);
 
+  let controllerContainer = document.createElement("div");
+  controllerContainer.setAttribute("id","controllerContainer");
+  player.appendChild(controllerContainer);
+
   let markListContainer = document.createElement("div");
   markListContainer.setAttribute("id","markListContainer");
   player.appendChild(markListContainer);
 
   //Generating the video player
   markedVid.generateVideoPlayer(vidContainer);
+
+  //Generating control bar
+  markedVid.generateControlBar(controllerContainer);
 
   //Generating marks's list
   markedVid.generateMarkerList(markListContainer);
