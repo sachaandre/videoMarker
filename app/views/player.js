@@ -11,11 +11,6 @@ function generatePlayerPage(){
   //Creating a MarkedVid instance
   let markedVid = new MarkedVid("/media/module_1/test.mp4", "mp4");
 
-  //Pushing markers
-  markedVid.pushMarker("00:00","Debut");
-  markedVid.pushMarker("00:29","Contexte");
-  markedVid.pushMarker("01:35","Axe Hierarchique");
-
   //Creating a container for video player, buttons and mark list
   let vidContainer = document.createElement("div");
   vidContainer.setAttribute("id","videoContainer");
@@ -35,8 +30,19 @@ function generatePlayerPage(){
   //Generating control bar
   markedVid.generateControlBar(controllerContainer);
 
-  //Generating marks's list
-  markedVid.generateMarkerList(markListContainer);
+
+
+  //Pushing markers
+  markedVid.videoElement.addEventListener("loadeddata", function(){
+    markedVid.pushMarker("00:00","Debut",0,"00:28");
+    markedVid.pushMarker("00:29","Contexte",1,"00:34");
+    markedVid.pushMarker("01:35","Axe Hierarchique",2);
+
+    //Generating marks's list
+    markedVid.generateMarkerList(markListContainer);
+  });
+
+
 
 }
 
