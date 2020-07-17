@@ -130,6 +130,9 @@ export class MarkedVid {
     return seconds;
   }
 
+  //******************************************************
+  //**  RETURN ON PAUSE FUNCTIONNALITY
+  //*****************************************************/
   /*
     Toggle the Return on Pause option.
     The return on pause let the user go back to the beggining of the last marker read when pausing the video.
@@ -151,12 +154,10 @@ export class MarkedVid {
       let res = self.marksArray.findIndex(mark => mark.markStart == self.videoElement.currentTime.toFixed(0));
       // If findIndex found something (different from -1) then assign it
       if (res != -1) self.markCurrentlyPlayed = res;
-      console.log("a");
     },1000);
   }
 
   stopReturnOnPauseWatcher(){
-    console.log(this.returnOnPauseWatcher);
     clearInterval(this.returnOnPauseWatcher);
   }
 
@@ -166,5 +167,19 @@ export class MarkedVid {
     }
   }
 
+  /*******************************************************
+    PAUSE ON MARKER END FUNCTIONNALITY
+  *******************************************************/
+  togglePauseOnMarker(){
+    let self = this;
+    this.pauseOnMarkEnd = this.pauseOnMarkEnd ? false : true;
+    element.innerText = this.pauseOnMarkEnd ? "Deactivate Pause at End Of Mark" : "Activate Pause at End Of Mark";
+    if (this.returnOnPause){
+      this.startReturnOnPauseWatcher();
+    } else {
+      this.stopReturnOnPauseWatcher();
+    }
+  }
+  }
 
 }
