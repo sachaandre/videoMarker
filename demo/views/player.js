@@ -1,5 +1,5 @@
 //
-import {MarkedVid} from '/lib/videoMarker/MarkedVid.js';
+import {MarkedVid} from '../../src/index.js';
 
 //Creating player page container (w/ id)
 export let player = document.createElement("div");
