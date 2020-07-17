@@ -11,9 +11,13 @@
 export class MarkedVid {
   constructor(videoPath, videoFormat) {
     this.marksArray = [];
-    this.markCurrentlyPlayed;
+    this.markCurrentlyPlayed = 0;
     this.videoDuration;
     this.videoElement = this.createVideoElement(videoPath, videoFormat);
+    this.returnOnPause = false;
+    this.returnOnPauseWatcher = null;
+    this.pauseOnMarkEnd = false;
+    this.pauseOnMarkEndWatcher = null;
   }
 
   /*
@@ -24,7 +28,7 @@ export class MarkedVid {
       - markIndex : index of the section
       - markLevel : hierarchy level. by default is equal to one, the higher level.
   */
-  pushMarker(start, label, index, end = this.videoElement.duration, level = 1) {
+  addMarker(start, label, index, end = this.videoElement.duration, level = 1) {
     this.marksArray.push({
       markStart: this.toSeconds(start),
       markEnd: end == this.videoElement.duration ? end : this.toSeconds(end),
@@ -43,13 +47,14 @@ export class MarkedVid {
     let ulElement = document.createElement("ul");
     ulElement.setAttribute("id", "mv-markerlist");
     //creating li + button elements
-    this.marksArray.forEach(mark => {
+    this.marksArray.forEach((mark, i) => {
       if(mark.markLevel == 1) {
         let li = document.createElement("li");
         li.setAttribute("class", "mv-marker");
         let button = document.createElement("button");
         button.innerText = mark.markLabel;
         button.addEventListener('click', function() {
+          self.markCurrentlyPlayed = i;
           self.goTo(mark.markStart);
         });
         li.appendChild(button);
@@ -82,13 +87,12 @@ export class MarkedVid {
     let video = this.videoElement;
     let isPlaying = false;
     playButton.innerText = "Play"
-    self.markCurrentlyPlayed = 0;
     playButton.addEventListener("click", function() {
       if( isPlaying ){
         video.pause();
+        if (self.returnOnPause) self.returnToLastMark();
         isPlaying = false;
         playButton.innerText = "Play";
-        self.goTo(self.marksArray[self.markCurrentlyPlayed].markStart);
       } else {
         video.play();
         isPlaying = true;
@@ -125,5 +129,42 @@ export class MarkedVid {
     //
     return seconds;
   }
+
+  /*
+    Toggle the Return on Pause option.
+    The return on pause let the user go back to the beggining of the last marker read when pausing the video.
+  */
+  toggleReturnOnPause(element){
+    let self = this;
+    this.returnOnPause = this.returnOnPause ? false : true;
+    element.innerText = this.returnOnPause ? "Deactivate return on pause" : "Activate return on pause";
+    if (this.returnOnPause){
+      this.startReturnOnPauseWatcher()
+    } else {
+      this.stopReturnOnPauseWatcher()
+    }
+  }
+
+  startReturnOnPauseWatcher(){
+    let self = this;
+    this.returnOnPauseWatcher = setInterval(function(){
+      let res = self.marksArray.findIndex(mark => mark.markStart == self.videoElement.currentTime.toFixed(0));
+      // If findIndex found something (different from -1) then assign it
+      if (res != -1) self.markCurrentlyPlayed = res;
+      console.log("a");
+    },1000);
+  }
+
+  stopReturnOnPauseWatcher(){
+    console.log(this.returnOnPauseWatcher);
+    clearInterval(this.returnOnPauseWatcher);
+  }
+
+  returnToLastMark(){
+    if (this.returnOnPause) {
+      this.goTo(this.marksArray[this.markCurrentlyPlayed].markStart);
+    }
+  }
+
 
 }
