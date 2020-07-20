@@ -74,3 +74,21 @@ button:hover, button:focus, button:active{
 #markListContainer #mv-markerlist li {
   margin-bottom: 15px;
 }
+
+#global-info{
+  background: #fff;
+  box-shadow: 1px 1px 15px 0px rgba(0,56,90,0.5);
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 3px;
+}
+
+code{
+  background: #333;
+  padding: 5px;
+  margin: 10px 0;
+  display: inline-block;
+  border-left: 3px solid orange;
+  color: #fff;
+  border-radius: 3px;
+}
