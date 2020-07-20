@@ -6,7 +6,7 @@ let player = document.createElement("div");
 player.setAttribute("id","playerContainer");
 
 //Creating a MarkedVid instance
-let markedVid = new MarkedVid("https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4", "mp4");
+let markedVid = new MarkedVid("https://html5videoformatconverter.com/data/images/happyfit2.mp4", "mp4");
 
 //Creating a container for video player, buttons and mark list
 let vidContainer = document.createElement("div");
@@ -31,8 +31,7 @@ markedVid.generateControlBar(controllerContainer);
 markedVid.videoElement.addEventListener("loadeddata", function(){
   markedVid.addMarker("00:00","Start",0,"00:28");
   markedVid.addMarker("00:29","Marker 1",1,"00:44");
-  markedVid.addMarker("00:45","Marker 2",2,"01:34")
-  markedVid.addMarker("01:35","Marker 3",3);
+  markedVid.addMarker("00:45","Marker 2",2)
 
   //Generating marks's list
   markedVid.generateMarkerList(markListContainer);

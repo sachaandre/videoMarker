@@ -78,7 +78,11 @@ export class MarkedVid {
   */
   generateControlBar(element) {
     let playButton = this.generatePlay();
+    let nextButton = this.generateNextMark();
+    let prevButton = this.generatePreviousMark();
     element.appendChild(playButton);
+    element.appendChild(nextButton);
+    element.appendChild(prevButton);
   }
 
   generatePlay(){
@@ -86,21 +90,51 @@ export class MarkedVid {
     let playButton = document.createElement("button");
     let self = this;
     let video = this.videoElement;
-    playButton.innerText = "Play"
-    playButton.setAttribute("id","play-button")
+    playButton.innerHTML = "<i class='fas fa-play fa-lg'></i>";
+    playButton.setAttribute("id","play-button");
     playButton.addEventListener("click", function() {
       if( self.isPlaying ){
         video.pause();
         if (self.returnOnPause) self.returnToLastMark();
         self.isPlaying = false;
-        playButton.innerText = "Play";
+        playButton.innerHTML = "<i class='fas fa-play fa-lg'></i>";
       } else {
         video.play();
         self.isPlaying = true;
-        playButton.innerText = "Pause";
+        playButton.innerHTML = "<i class='fas fa-pause fa-lg'></i>";
       }
     })
     return playButton
+  }
+
+  generateNextMark(){
+    let nextButton = document.createElement("button");
+    let self = this;
+    let video = this.videoElement;
+    nextButton.innerHTML = "<i class='fas fa-step-forward fa-lg'></i>"
+    nextButton.setAttribute("id","next-button");
+    nextButton.addEventListener("click", function(){
+      if(self.markCurrentlyPlayed + 1 <= self.marksArray.length - 1){
+        self.goTo(self.marksArray[self.markCurrentlyPlayed + 1].markStart);
+        self.markCurrentlyPlayed++;
+      }
+    })
+    return nextButton;
+  }
+
+  generatePreviousMark(){
+    let prevButton = document.createElement("button");
+    let self = this;
+    let video = this.videoElement;
+    prevButton.innerHTML = "<i class='fas fa-step-backward fa-lg'></i>"
+    prevButton.setAttribute("id","prev-button");
+    prevButton.addEventListener("click", function(){
+      if(self.markCurrentlyPlayed - 1 >= 0){
+        self.goTo(self.marksArray[self.markCurrentlyPlayed - 1].markStart);
+        self.markCurrentlyPlayed--;
+      }
+    })
+    return prevButton;
   }
   /*
     Create a video html element with correct path and format
@@ -186,7 +220,7 @@ export class MarkedVid {
       if (self.videoElement.currentTime.toFixed(2) == self.marksArray[self.markCurrentlyPlayed].markEnd) {
         self.videoElement.pause();
         self.isPlaying = false;
-        document.getElementById("play-button").innerText = "Play";
+        document.getElementById("play-button").innerHTML = "<i class='fas fa-play fa-lg'></i>";
       } ;
     })
   }
