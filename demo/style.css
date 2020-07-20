@@ -1,0 +1,69 @@
+body{
+  font-family: 'Open Sans', sans-serif;
+  background-color: #0093E9;
+ background-image: -webkit-linear-gradient(70deg, #0093E9 0%, #80D0C7 100%);
+ background-image: -o-linear-gradient(70deg, #0093E9 0%, #80D0C7 100%);
+ background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+
+
+  padding: 15px;
+
+}
+
+h1{
+  font-family: 'Fredoka One', cursive;
+  color: #fff;
+  text-align: center;
+}
+
+button{
+  background: rgba(0,0,0,0);
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  color: #fff;
+  border: 3px solid #fff;
+  border-radius: 25px;
+  padding: 5px 15px;
+    box-shadow: 1px 1px 15px 0px rgba(0,56,90,0.25);
+}
+
+button:hover, button:focus, button:active{
+  background-color: #FAD961;
+  background-image: -webkit-linear-gradient(left, #FAD961 0%, #F76B1C 100%);
+  background-image: -o-linear-gradient(left, #FAD961 0%, #F76B1C 100%);
+  background-image: linear-gradient(to right, #FAD961 0%, #F76B1C 100%);
+
+}
+
+#playerContainer{
+  display: flex;
+}
+#playerContainer div{
+  padding: 15px;
+}
+
+#controllerContainer{
+  display: flex;
+  flex-flow: column;
+}
+
+
+#videoContainer{
+  width: 50%;
+}
+
+#videoContainer video {
+  width: 100%;
+  /*border: 10px solid #fff;*/
+  border-radius: 5px;
+  box-shadow: 1px 1px 15px 0px rgba(0,56,90,0.5);
+}
+
+#markListContainer #mv-markerlist{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#markListContainer #mv-markerlist li {
+  margin-bottom: 15px;
+}

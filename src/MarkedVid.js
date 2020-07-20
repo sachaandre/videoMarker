@@ -18,6 +18,7 @@ export class MarkedVid {
     this.returnOnPauseWatcher = null;
     this.pauseOnMarkEnd = false;
     this.pauseOnMarkEndWatcher = null;
+    this.isPlaying = false;
   }
 
   /*
@@ -31,7 +32,7 @@ export class MarkedVid {
   addMarker(start, label, index, end = this.videoElement.duration, level = 1) {
     this.marksArray.push({
       markStart: this.toSeconds(start),
-      markEnd: end == this.videoElement.duration ? end : this.toSeconds(end),
+      markEnd: end == this.videoElement.duration ? end : this.toSeconds(end) + 0.99,
       markLabel: label,
       markIndex: index,
       markLevel: level
@@ -85,17 +86,17 @@ export class MarkedVid {
     let playButton = document.createElement("button");
     let self = this;
     let video = this.videoElement;
-    let isPlaying = false;
     playButton.innerText = "Play"
+    playButton.setAttribute("id","play-button")
     playButton.addEventListener("click", function() {
-      if( isPlaying ){
+      if( self.isPlaying ){
         video.pause();
         if (self.returnOnPause) self.returnToLastMark();
-        isPlaying = false;
+        self.isPlaying = false;
         playButton.innerText = "Play";
       } else {
         video.play();
-        isPlaying = true;
+        self.isPlaying = true;
         playButton.innerText = "Pause";
       }
     })
@@ -154,7 +155,7 @@ export class MarkedVid {
       let res = self.marksArray.findIndex(mark => mark.markStart == self.videoElement.currentTime.toFixed(0));
       // If findIndex found something (different from -1) then assign it
       if (res != -1) self.markCurrentlyPlayed = res;
-    },1000);
+    }, 500);
   }
 
   stopReturnOnPauseWatcher(){
@@ -162,24 +163,36 @@ export class MarkedVid {
   }
 
   returnToLastMark(){
-    if (this.returnOnPause) {
-      this.goTo(this.marksArray[this.markCurrentlyPlayed].markStart);
-    }
+    this.goTo(this.marksArray[this.markCurrentlyPlayed].markStart);
   }
 
   /*******************************************************
     PAUSE ON MARKER END FUNCTIONNALITY
   *******************************************************/
-  togglePauseOnMarker(){
+  togglePauseOnMarker(element){
     let self = this;
     this.pauseOnMarkEnd = this.pauseOnMarkEnd ? false : true;
     element.innerText = this.pauseOnMarkEnd ? "Deactivate Pause at End Of Mark" : "Activate Pause at End Of Mark";
-    if (this.returnOnPause){
-      this.startReturnOnPauseWatcher();
+    if (this.pauseOnMarkEnd){
+      this.startPauseOnMarkerWatcher();
     } else {
       this.stopReturnOnPauseWatcher();
     }
   }
+
+  startPauseOnMarkerWatcher(){
+    let self = this;
+    this.pauseOnMarkEndWatcher = setInterval(function(){
+      if (self.videoElement.currentTime.toFixed(2) == self.marksArray[self.markCurrentlyPlayed].markEnd) {
+        self.videoElement.pause();
+        self.isPlaying = false;
+        document.getElementById("play-button").innerText = "Play";
+      } ;
+    })
+  }
+
+  stopPauseOnMarkerWatcher(){
+    clearInterval(this.pauseOnMarkEndWatcher);
   }
 
 }

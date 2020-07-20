@@ -30,8 +30,9 @@ markedVid.generateControlBar(controllerContainer);
 //Pushing markers
 markedVid.videoElement.addEventListener("loadeddata", function(){
   markedVid.addMarker("00:00","Start",0,"00:28");
-  markedVid.addMarker("00:29","Marker 1",1,"00:34");
-  markedVid.addMarker("01:35","Marker 2",2);
+  markedVid.addMarker("00:29","Marker 1",1,"00:44");
+  markedVid.addMarker("00:45","Marker 2",2,"01:34")
+  markedVid.addMarker("01:35","Marker 3",3);
 
   //Generating marks's list
   markedVid.generateMarkerList(markListContainer);
@@ -43,3 +44,7 @@ main.appendChild(player);
 let toggleReturn = document.getElementById("toggle-return");
 toggleReturn.innerText = markedVid.returnOnPause ? "Deactivate return on pause" : "Activate return on pause";
 toggleReturn.addEventListener("click", function(){markedVid.toggleReturnOnPause(toggleReturn)});
+
+let togglePause = document.getElementById("toggle-pause");
+togglePause.innerText = markedVid.pauseOnMarkEnd ? "Deactivate Pause at End Of Mark" : "Activate Pause at End Of Mark";
+togglePause.addEventListener("click", function(){markedVid.togglePauseOnMarker(togglePause)});
