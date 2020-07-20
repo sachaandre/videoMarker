@@ -15,7 +15,7 @@ export class MarkedVid {
     this.videoDuration;
     this.videoElement = this.createVideoElement(videoPath, videoFormat);
     this.returnOnPause = false;
-    this.returnOnPauseWatcher = null;
+    this.playWatcher = null;
     this.pauseOnMarkEnd = false;
     this.pauseOnMarkEndWatcher = null;
     this.isPlaying = false;
@@ -98,13 +98,29 @@ export class MarkedVid {
         if (self.returnOnPause) self.returnToLastMark();
         self.isPlaying = false;
         playButton.innerHTML = "<i class='fas fa-play fa-lg'></i>";
+        self.stopPlayWatcher();
       } else {
         video.play();
         self.isPlaying = true;
         playButton.innerHTML = "<i class='fas fa-pause fa-lg'></i>";
+        self.startPlayWatcher();
       }
     })
     return playButton
+  }
+
+
+  startPlayWatcher(){
+    let self = this;
+    this.playWatcher = setInterval(function(){
+      let res = self.marksArray.findIndex(mark => mark.markStart == self.videoElement.currentTime.toFixed(2));
+      // If findIndex found something (different from -1) then assign it
+      if (res != -1) self.markCurrentlyPlayed = res;
+    },5);
+  }
+
+  stopPlayWatcher(){
+      clearInterval(this.playWatcher);
   }
 
   generateNextMark(){
@@ -132,6 +148,9 @@ export class MarkedVid {
       if(self.markCurrentlyPlayed - 1 >= 0){
         self.goTo(self.marksArray[self.markCurrentlyPlayed - 1].markStart);
         self.markCurrentlyPlayed--;
+      } else {
+        self.goTo(self.marksArray[0].markStart);
+        self.markCurrentlyPlayed = 0;
       }
     })
     return prevButton;
@@ -176,24 +195,6 @@ export class MarkedVid {
     let self = this;
     this.returnOnPause = this.returnOnPause ? false : true;
     element.innerText = this.returnOnPause ? "Deactivate return on pause" : "Activate return on pause";
-    if (this.returnOnPause){
-      this.startReturnOnPauseWatcher()
-    } else {
-      this.stopReturnOnPauseWatcher()
-    }
-  }
-
-  startReturnOnPauseWatcher(){
-    let self = this;
-    this.returnOnPauseWatcher = setInterval(function(){
-      let res = self.marksArray.findIndex(mark => mark.markStart == self.videoElement.currentTime.toFixed(0));
-      // If findIndex found something (different from -1) then assign it
-      if (res != -1) self.markCurrentlyPlayed = res;
-    }, 500);
-  }
-
-  stopReturnOnPauseWatcher(){
-    clearInterval(this.returnOnPauseWatcher);
   }
 
   returnToLastMark(){
@@ -210,19 +211,20 @@ export class MarkedVid {
     if (this.pauseOnMarkEnd){
       this.startPauseOnMarkerWatcher();
     } else {
-      this.stopReturnOnPauseWatcher();
+      this.stopPauseOnMarkerWatcher();
     }
   }
 
   startPauseOnMarkerWatcher(){
     let self = this;
     this.pauseOnMarkEndWatcher = setInterval(function(){
-      if (self.videoElement.currentTime.toFixed(2) == self.marksArray[self.markCurrentlyPlayed].markEnd) {
+      if (self.videoElement.currentTime.toFixed(2) == self.marksArray[self.markCurrentlyPlayed].markEnd.toFixed(2)) {
         self.videoElement.pause();
         self.isPlaying = false;
         document.getElementById("play-button").innerHTML = "<i class='fas fa-play fa-lg'></i>";
-      } ;
-    })
+        self.stopPlayWatcher();
+      }
+    },5);
   }
 
   stopPauseOnMarkerWatcher(){

@@ -29,9 +29,10 @@ markedVid.generateControlBar(controllerContainer);
 
 //Pushing markers
 markedVid.videoElement.addEventListener("loadeddata", function(){
-  markedVid.addMarker("00:00","Start",0,"00:28");
-  markedVid.addMarker("00:29","Marker 1",1,"00:44");
-  markedVid.addMarker("00:45","Marker 2",2)
+  markedVid.addMarker("00:00","Start",0,"00:18");
+  markedVid.addMarker("00:19","Marker 1",1,"00:28")
+  markedVid.addMarker("00:29","Marker 2",2,"00:44");
+  markedVid.addMarker("00:45","Marker 3",3)
 
   //Generating marks's list
   markedVid.generateMarkerList(markListContainer);
